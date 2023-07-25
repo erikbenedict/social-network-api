@@ -60,4 +60,17 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+
+  async deleteUser(req, res) {
+    try {
+      const deletedUser = await User.findOneAndDelete({
+        _id: req.params.userId,
+      });
+      res.json(deletedUser);
+      console.log(`Deleted: ${deletedUser}`);
+    } catch (err) {
+      console.log('Something went wrong when deleting that user');
+      res.status(500).json(err);
+    }
+  },
 };
