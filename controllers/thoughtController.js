@@ -32,6 +32,13 @@ module.exports = {
   async createThought(req, res) {
     try {
       const newThought = await Thought.create(req.body);
+      const userId = req.body.userId;
+      console.log('>>>>>> newThought >>>>>', newThought);
+      console.log('>>>>>> userId >>>>>', userId);
+
+      await User.findByIdAndUpdate(userId, {
+        $push: { thoughts: newThought._id },
+      });
 
       res.json(newThought);
     } catch (err) {
