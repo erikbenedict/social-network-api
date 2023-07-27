@@ -32,6 +32,7 @@ module.exports = {
   async createUser(req, res) {
     try {
       const newUser = await User.create(req.body);
+
       res.json(newUser);
     } catch (err) {
       console.log('Something went wrong creating a new user');
@@ -66,10 +67,49 @@ module.exports = {
       const deletedUser = await User.findOneAndDelete({
         _id: req.params.userId,
       });
+
       res.json(deletedUser);
       console.log(`Deleted: ${deletedUser}`);
     } catch (err) {
       console.log('Something went wrong when deleting that user');
+      res.status(500).json(err);
+    }
+  },
+
+  async addFriend(req, res) {
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $addToSet: { friends: req.body } },
+        { runValidators: true, new: true }
+      );
+
+      if (!user) {
+        return res.status(400).json({ message: 'No user found with that id' });
+      }
+
+      res.json(user);
+    } catch (err) {
+      console.log('Something went wrong when adding that friend');
+      res.status(500).json(err);
+    }
+  },
+
+  async removeFriend(req, res) {
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: req.params.userId },
+        { $pull: { friends: { _id: req.params.friendId } } },
+        { runValidators: true, new: true }
+      );
+
+      if (!user) {
+        return res.status(400).json({ message: 'No user found with that id' });
+      }
+
+      res.json(user);
+    } catch (err) {
+      console.log('Something went wrong when removing that friend');
       res.status(500).json(err);
     }
   },
