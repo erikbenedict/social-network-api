@@ -68,6 +68,13 @@ module.exports = {
         _id: req.params.userId,
       });
 
+      if (!deletedUser) {
+        return res.status(404).json({ message: 'No user found with that id' });
+      }
+
+      // * Remove associated thoughts for the deleted user
+      await Thought.deleteMany({ username: deletedUser.username });
+
       res.json(deletedUser);
       console.log(`Deleted: ${deletedUser}`);
     } catch (err) {
@@ -75,6 +82,8 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+
+  // **** Friend Controllers **** //
 
   async addFriend(req, res) {
     try {
@@ -85,7 +94,7 @@ module.exports = {
       );
 
       if (!user) {
-        return res.status(400).json({ message: 'No user found with that id' });
+        return res.status(404).json({ message: 'No user found with that id' });
       }
 
       res.json(user);
@@ -104,7 +113,7 @@ module.exports = {
       );
 
       if (!user) {
-        return res.status(400).json({ message: 'No user found with that id' });
+        return res.status(404).json({ message: 'No user found with that id' });
       }
 
       res.json(user);
