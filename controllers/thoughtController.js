@@ -1,14 +1,15 @@
 const Thought = require('../models/Thought');
 const User = require('../models/User');
+const Reaction = require('../models/Reaction');
 
 module.exports = {
   async getThoughts(req, res) {
     try {
-      const thoughts = await Thoughts.find();
+      const thoughts = await Thought.find();
 
       res.json(thoughts);
     } catch (err) {
-      console.log('Something went wrong getting the thoughts');
+      console.log('Something went wrong getting the thoughts', err);
       return res.status(500).json(err);
     }
   },
@@ -25,7 +26,7 @@ module.exports = {
 
       res.json(thought);
     } catch (err) {
-      console.log('Something went wrong getting that thought');
+      console.log('Something went wrong getting that thought', err);
       return res.status(500).json(err);
     }
   },
@@ -48,12 +49,9 @@ module.exports = {
 
   async updateThought(req, res) {
     try {
-      const { thoughtId } = req.params.thoughtId;
-      const { thoughtText } = req.body;
-
       const updatedThought = await Thought.findOneAndUpdate(
-        { _id: thoughtId },
-        { $set: { thoughtText } },
+        { _id: req.params.thoughtId },
+        { $set: req.body },
         { new: true }
       );
 
@@ -63,7 +61,7 @@ module.exports = {
 
       res.json(updatedThought);
     } catch (err) {
-      console.log('Something went wrong when updating that thought');
+      console.log('Something went wrong when updating that thought', err);
       res.status(500).json(err);
     }
   },
@@ -83,7 +81,7 @@ module.exports = {
       res.json(deletedThought);
       console.log(`Deleted: ${deletedThought}`);
     } catch (err) {
-      console.log('Something went wrong when deleting that thought');
+      console.log('Something went wrong when deleting that thought', err);
       res.status(500).json(err);
     }
   },
@@ -106,7 +104,7 @@ module.exports = {
 
       res.json(thought);
     } catch (err) {
-      console.log('Something went wrong when adding that reaction');
+      console.log('Something went wrong when adding that reaction', err);
       res.status(500).json(err);
     }
   },
@@ -115,7 +113,7 @@ module.exports = {
     try {
       const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
-        { $pull: { reactions: { _id: req.params.reactionId } } },
+        { $pull: { reactions: { reactionId: req.params.reactionId } } },
         { runValidators: true, new: true }
       );
 
@@ -127,7 +125,7 @@ module.exports = {
 
       res.json(thought);
     } catch (err) {
-      console.log('Something went wrong when removing that reaction');
+      console.log('Something went wrong when removing that reaction', err);
       res.status(500).json(err);
     }
   },
