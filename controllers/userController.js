@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Thought = require('../models/Thought');
 
 module.exports = {
   async getUsers(req, res) {
@@ -7,7 +8,7 @@ module.exports = {
 
       res.json(users);
     } catch (err) {
-      console.log('Something went wrong getting the users');
+      console.log('Something went wrong getting the users', err);
       return res.status(500).json(err);
     }
   },
@@ -24,7 +25,7 @@ module.exports = {
 
       res.json(user);
     } catch (err) {
-      console.log('Something went wrong getting that user');
+      console.log('Something went wrong getting that user', err);
       return res.status(500).json(err);
     }
   },
@@ -35,14 +36,14 @@ module.exports = {
 
       res.json(newUser);
     } catch (err) {
-      console.log('Something went wrong creating a new user');
+      console.log('Something went wrong creating a new user', err);
       res.status(500).json(err);
     }
   },
 
   async updateUser(req, res) {
     try {
-      const { userId } = req.params.userId;
+      const { userId } = req.params;
       const { username, email } = req.body;
 
       const updatedUser = await User.findOneAndUpdate(
@@ -57,7 +58,7 @@ module.exports = {
 
       res.json(updatedUser);
     } catch (err) {
-      console.log('Something went wrong when updating that user');
+      console.log('Something went wrong when updating that user', err);
       res.status(500).json(err);
     }
   },
@@ -78,7 +79,7 @@ module.exports = {
       res.json(deletedUser);
       console.log(`Deleted: ${deletedUser}`);
     } catch (err) {
-      console.log('Something went wrong when deleting that user');
+      console.log('Something went wrong when deleting that user', err);
       res.status(500).json(err);
     }
   },
@@ -99,7 +100,7 @@ module.exports = {
 
       res.json(user);
     } catch (err) {
-      console.log('Something went wrong when adding that friend');
+      console.log('Something went wrong when adding that friend', err);
       res.status(500).json(err);
     }
   },
@@ -108,7 +109,7 @@ module.exports = {
     try {
       const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $pull: { friends: { _id: req.params.friendId } } },
+        { $pull: { friends: req.params.friendId } },
         { runValidators: true, new: true }
       );
 
@@ -118,7 +119,7 @@ module.exports = {
 
       res.json(user);
     } catch (err) {
-      console.log('Something went wrong when removing that friend');
+      console.log('Something went wrong when removing that friend', err);
       res.status(500).json(err);
     }
   },
