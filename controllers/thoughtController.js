@@ -1,4 +1,5 @@
 const Thought = require('../models/Thought');
+const User = require('../models/User');
 
 module.exports = {
   async getThoughts(req, res) {
@@ -33,8 +34,6 @@ module.exports = {
     try {
       const newThought = await Thought.create(req.body);
       const userId = req.body.userId;
-      console.log('>>>>>> newThought >>>>>', newThought);
-      console.log('>>>>>> userId >>>>>', userId);
 
       await User.findByIdAndUpdate(userId, {
         $push: { thoughts: newThought._id },
@@ -42,7 +41,7 @@ module.exports = {
 
       res.json(newThought);
     } catch (err) {
-      console.log('Something went wrong creating a new thought');
+      console.log('Something went wrong creating a new thought', err);
       res.status(500).json(err);
     }
   },
