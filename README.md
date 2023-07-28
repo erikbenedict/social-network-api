@@ -29,9 +29,7 @@ To get a local copy up and running follow these simple example steps.
 
 Below is a demo of the functionality for an API for a social network web application. After setting up the connection/database, and invoking the application, I use Insomnia to test all API routes.
 
-
-https://github.com/erikbenedict/social-network-api/assets/89614823/d3ee7018-0f4c-4b4f-b3ea-8d16771e7aba
-
+https://github.com/erikbenedict/social-network-api/assets/89614823/c576787c-d55e-432f-927c-4b2b610a8211
 
 ## Contributing
 
